@@ -1,0 +1,107 @@
+#include "savage.h"
+
+
+
+struct Savage * _cooker;
+struct Pot * _pot;
+
+void * cookerLife (void *);
+void * savageLife (void *);
+
+void walk (struct Savage *, int, int);
+void eat  (struct Savage *);
+
+pthread_mutex_t emptyPot = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t fullPot = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void start (int potX, int potY, int potCapacity, int cookerX, int cookerY) {
+    pthread_t thr;
+
+    _cooker         = (struct Savage *) malloc(sizeof(struct Savage));
+    _cooker->status = SLEEPING;
+    _cooker->x      = cookerX;
+    _cooker->y      = cookerY;
+
+    _pot            = (struct Pot *) malloc(sizeof(struct Pot));
+    _pot->capacity  = potCapacity;
+    _pot->meals     = potCapacity;
+    _pot->x         = potX;
+    _pot->y         = potY;
+
+    pthread_create(&thr, NULL, cookerLife, (void *) _cooker);
+}
+
+struct Savage * newSavage (int x, int y) {
+    struct Savage * savage;
+    pthread_t thr;
+
+    savage         = (struct Savage *) malloc(sizeof(struct Savage));
+    savage->status = HUNGRY;
+    savage->x      = x;
+    savage->y      = y;
+
+    pthread_create(&thr, NULL, savageLife, (void *) savage);
+
+    return savage;
+}
+
+struct Savage * cooker () {
+    return _cooker;
+}
+
+struct Pot * pot () {
+    return _pot;
+}
+
+void * cookerLife (void * v) {
+    struct Savage * cooker = (struct Savage *) v;
+    int originalX = cooker->x;
+    int originalY = cooker->y;
+
+    while (1) {
+        cooker->status = SLEEPING;
+        pthread_mutex_lock(&emptyPot);
+        walk(cooker, _pot->x, _pot->y);
+        _pot->meals = _pot->capacity;
+        pthread_mutex_unlock(&fullPot);
+        walk(cooker, originalX, originalY);
+    }
+}
+
+void * savageLife (void * v) {
+    struct Savage * savage = (struct Savage *) v;
+    int originalX = savage->x;
+    int originalY = savage->y;
+
+    while (1) {
+        pthread_mutex_lock(&mutex);
+        if (_pot->meals <= 0) {
+            pthread_mutex_unlock(&emptyPot);
+            pthread_mutex_lock(&fullPot);
+        }
+        walk(savage, _pot->x, _pot->y);
+        _pot->meals--;
+        walk(savage, originalX, originalY);
+        pthread_mutex_unlock(&mutex);
+        eat(savage);
+    }
+}
+
+void walk (struct Savage * savage, int finalX, int finalY) {
+    int xIncrement = savage->x < finalX ? 1 : -1;
+    int yIncrement = savage->y < finalY ? 1 : -1;
+
+    savage->status = WALKING;
+    while (!(savage->x == finalX && savage->y == finalY)) {
+        if (!(savage->x == finalX)) savage->x += xIncrement;
+        if (!(savage->y == finalY)) savage->y += yIncrement;
+        usleep(150000);
+    }
+}
+
+void eat (struct Savage * savage) {
+    savage->status = EATING;
+    usleep(5000000 + 1000000 * (rand() % 10));
+    savage->status = HUNGRY;
+}
