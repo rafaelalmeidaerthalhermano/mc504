@@ -1,3 +1,10 @@
+//Grupo: Bruno Vargas    ra 116330
+//       Jonatan Valongo ra 117424
+//		 Rafael Erthal   ra 121286 
+// Animacao referente ao Projeto 01 da materia MC504 com a professora Islene 
+// referente ao problema : The Dinning Savages
+// Data 27/09/2013 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,6 +14,8 @@
 #define MAXLIN 25
 
 void drawField(char campo[MAXLIN][MAXCOL]) 
+// Esta funcão monta a matriz onde ficara as informacoes a serem impressas na tela
+// outras funcoes irao açterar esta matriz para criar o efeito de movimento na tela.
 {
 	int i, j;
 	for (i = 0; i < MAXLIN; i++) 
@@ -46,7 +55,7 @@ void drawPot(char campo[MAXLIN][MAXCOL], int meals)
 } 
 
 void printField(char campo[MAXLIN][MAXCOL])
-/* Esta função desenha a matriz no console, aproveita e coloca a quantidade de comida no pot*/
+/* Esta função desenha a matriz no console*/
 {
 	int i, j;
 	i = j = 0;
@@ -67,6 +76,7 @@ void printField(char campo[MAXLIN][MAXCOL])
 }
 
 void drawCooker(char campo[MAXLIN][MAXCOL], int lin, int col)
+//funcao que desenha o cozinheiro na matriz
 {
 	campo[lin][col + 3] = '0';
 	campo[lin][col + 4] = '0';	
@@ -74,6 +84,7 @@ void drawCooker(char campo[MAXLIN][MAXCOL], int lin, int col)
 }
 
 void clearSteps(char campo[MAXLIN][MAXCOL], int lin, int col)
+//funcao limpa o selvagem ou cozinheiro para que nao deixe "pegadas"
 {
 	campo[lin][col] = ' ';
 	campo[lin][col + 1] = ' ';	
@@ -81,6 +92,7 @@ void clearSteps(char campo[MAXLIN][MAXCOL], int lin, int col)
 }
 
 void drawSavage(char campo[MAXLIN][MAXCOL], int lin, int col, int status)
+//funcao que desenha o os selvagens na matriz
 {
     campo[lin][col] = '0';   
     campo[lin - 1][col] = ',';
@@ -122,6 +134,8 @@ int main()
 			currentSavage = savages[i];
 			drawSavage(campo, currentSavage->x, currentSavage->y, currentSavage->status);
 		}
+
+		//legenda da animacao
 		printField(campo);
 		printf  (" ,                   ,\n");
 		printf  (" 00                  00                 00\n");
