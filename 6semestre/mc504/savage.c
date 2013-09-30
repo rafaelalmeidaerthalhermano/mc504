@@ -1,7 +1,5 @@
 #include "savage.h"
 
-
-
 struct Savage * _cooker;
 struct Pot * _pot;
 
@@ -15,6 +13,15 @@ pthread_mutex_t emptyPot = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t fullPot = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+/*
+ * Starts the pot and the cooker with positions and meals
+ *
+ * potX {int} X coordinate of the pot
+ * potY {int} Y coordinate of the pot
+ * potCapacity {int} maximum meals in the pot
+ * cookerX {int} X coordinate of the cooker
+ * cookerY {int} Y coordinate of the cooker
+ */
 void start (int potX, int potY, int potCapacity, int cookerX, int cookerY) {
     pthread_t thr;
 
@@ -32,6 +39,12 @@ void start (int potX, int potY, int potCapacity, int cookerX, int cookerY) {
     pthread_create(&thr, NULL, cookerLife, (void *) _cooker);
 }
 
+/*
+ * Creates a new savage
+ *
+ * x {int} X coordinate of the savage
+ * y {int} Y coordinate of the savage
+ */
 struct Savage * newSavage (int x, int y) {
     struct Savage * savage;
     pthread_t thr;
@@ -46,14 +59,25 @@ struct Savage * newSavage (int x, int y) {
     return savage;
 }
 
+/*
+ * Returns the cooker
+ */
 struct Savage * cooker () {
     return _cooker;
 }
 
+/*
+ * Returns the pot
+ */
 struct Pot * pot () {
     return _pot;
 }
 
+/*
+ * Controls the cooker thread
+ *
+ * v {void *} pointer to the cooker
+ */
 void * cookerLife (void * v) {
     struct Savage * cooker = (struct Savage *) v;
     int originalX = cooker->x;
@@ -69,6 +93,11 @@ void * cookerLife (void * v) {
     }
 }
 
+/*
+ * Controls the savage thread
+ *
+ * v {void *} pointer to the savage
+ */
 void * savageLife (void * v) {
     struct Savage * savage = (struct Savage *) v;
     int originalX = savage->x;
@@ -88,6 +117,13 @@ void * savageLife (void * v) {
     }
 }
 
+/*
+ * Makes the savage walks from the current position to a new position
+ *
+ * savage {struct Savage *} pointer to the savage
+ * finalX {int} final X coordinate after walking
+ * finalY {int} final Y coordinate after walking
+ */
 void walk (struct Savage * savage, int finalX, int finalY) {
     int xIncrement = savage->x < finalX ? 1 : -1;
     int yIncrement = savage->y < finalY ? 1 : -1;
@@ -100,6 +136,11 @@ void walk (struct Savage * savage, int finalX, int finalY) {
     }
 }
 
+/*
+ * Eat some meal from the pot
+ *
+ * savage {struct Savage *} pointer to the savage
+ */
 void eat (struct Savage * savage) {
     savage->status = EATING;
     usleep(5000000 + 1000000 * (rand() % 10));
