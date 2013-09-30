@@ -2,7 +2,7 @@
 //       Jonatan Valongo ra 117424
 //		 Rafael Erthal   ra 121286 
 // Animacao referente ao Projeto 01 da materia MC504 com a professora Islene 
-// referente ao problema : The Dinning Savages
+// referente ao problema : The Dining Savages
 // Data 27/09/2013 
 
 #include <stdio.h>
@@ -65,7 +65,9 @@ void printField(char campo[MAXLIN][MAXCOL])
 	col = MAXCOL / 2;
 
 	//garanto que a tela estará limpa 
-	system("clear");               	
+	system("clear");
+
+	printf ("-----------The Dining Savages Problem-------------\n")   ;            	
 	for (i = 0; i < MAXLIN; i++)
 	{
 		for (j = 0; j < MAXCOL; j++)
@@ -141,6 +143,7 @@ int main()
 		printf  (" 00                  00                 00\n");
 		printf  ("  @                   #                  ^\n");
 		printf("\n Selvagem com fome | Selvagem comendo | Cozinheiro\n");
+		printf ("Precione ctrl+c para encerrar o programa.\n");
 		usleep(100000);
 	}
 	return 0;

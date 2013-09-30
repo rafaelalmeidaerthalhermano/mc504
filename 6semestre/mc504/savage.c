@@ -1,3 +1,10 @@
+//Grupo: Bruno Vargas    ra 116330
+//       Jonatan Valongo ra 117424
+//       Rafael Erthal   ra 121286 
+// Animacao referente ao Projeto 01 da materia MC504 com a professora Islene 
+// referente ao problema : The Dining Savages
+// Data 27/09/2013 
+
 #include "savage.h"
 
 struct Savage * _cooker;
