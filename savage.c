@@ -1,9 +1,9 @@
 /*Grupo: Bruno Vargas    ra 116330
  *       Jonatan Valongo ra 117424
- *       Rafael Erthal   ra 121286 
- * Animacao referente ao Projeto 01 da materia MC504 com a professora Islene 
+ *       Rafael Erthal   ra 121286
+ * Animacao referente ao Projeto 01 da materia MC504 com a professora Islene
  * referente ao problema : The Dining Savages
- * Data 27/09/2013 
+ * Data 27/09/2013
 */
 
 #include "savage.h"
@@ -44,6 +44,7 @@ void start (int potX, int potY, int potCapacity, int cookerX, int cookerY) {
     _pot->x         = potX;
     _pot->y         = potY;
 
+    pthread_mutex_lock(&emptyPot);
     pthread_create(&thr, NULL, cookerLife, (void *) _cooker);
 }
 
